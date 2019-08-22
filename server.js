@@ -42,7 +42,19 @@ server.get("/:id", (req, res) => {
     });
 });
 
-server.post("/", (req, res) => {});
+server.post("/", (req, res) => {
+  const newAccount = req.body;
+  db("accounts")
+    .insert(newAccount)
+    .then(newAccount => {
+      res.status(201).json(newAccount);
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Can not create new account"
+      });
+    });
+});
 
 server.put("/:id", (req, res) => {
   const { id } = req.params;
