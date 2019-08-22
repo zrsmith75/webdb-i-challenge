@@ -24,9 +24,10 @@ server.get("/:id", (req, res) => {
   db("accounts")
     .where({ id })
     .then(accounts => {
-      // console.log("accounts", accounts);
+      // console.log("accounts", accounts);newAccount
       const account = accounts[0];
-
+      newAccount;
+      newAccount;
       if (account) {
         res.status(500).json(account);
       } else {
