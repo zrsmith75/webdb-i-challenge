@@ -26,8 +26,6 @@ server.get("/:id", (req, res) => {
     .then(accounts => {
       // console.log("accounts", accounts);newAccount
       const account = accounts[0];
-      newAccount;
-      newAccount;
       if (account) {
         res.status(500).json(account);
       } else {
@@ -59,6 +57,25 @@ server.post("/", (req, res) => {
 
 server.put("/:id", (req, res) => {
   const { id } = req.params;
+  const updateAccount = req.body;
+
+  db("accounts")
+    .where({ id })
+    .update(updateAccount)
+    .then(count => {
+      if (count) {
+        res.status(200).json({ updated: count });
+      } else {
+        res.status(404).json({
+          message: "Can not locate the account you want to change"
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Unable to make your changes"
+      });
+    });
 });
 
 server.delete("/:id", (req, res) => {
