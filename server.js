@@ -80,6 +80,23 @@ server.put("/:id", (req, res) => {
 
 server.delete("/:id", (req, res) => {
   const { id } = req.params;
+  db("accounts")
+    .where({ id })
+    .del()
+    .then(count => {
+      if (count) {
+        res.json({ deleted: count });
+      } else {
+        res.status(404).json({
+          message: "Can not find your account by ID"
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Unable to DELETE your account"
+      });
+    });
 });
 
 module.exports = server;
