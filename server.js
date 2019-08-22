@@ -19,12 +19,37 @@ server.get("/", (req, res) => {
     });
 });
 
-server.get("/:id", (req, res) => {});
+server.get("/:id", (req, res) => {
+  const { id } = req.params;
+  db("accounts")
+    .where({ id })
+    .then(accounts => {
+      // console.log("accounts", accounts);
+      const account = accounts[0];
+
+      if (account) {
+        res.status(500).json(account);
+      } else {
+        res.status(404).json({
+          message: "The ID you requested does not exist"
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Unable to GET your account by ID"
+      });
+    });
+});
 
 server.post("/", (req, res) => {});
 
-server.put("/:id", (req, res) => {});
+server.put("/:id", (req, res) => {
+  const { id } = req.params;
+});
 
-server.delete("/:id", (req, res) => {});
+server.delete("/:id", (req, res) => {
+  const { id } = req.params;
+});
 
 module.exports = server;
