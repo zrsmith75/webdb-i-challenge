@@ -1,9 +1,102 @@
-const express = require('express');
+const express = require("express");
 
-const db = require('./data/dbConfig.js');
+const db = require("./data/dbConfig.js");
 
 const server = express();
 
 server.use(express.json());
+
+server.get("/", (req, res) => {
+  // db.select('*').from('accounts');
+  db("accounts")
+    .then(accounts => {
+      res.status(200).json(accounts);
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Unable to GET your account"
+      });
+    });
+});
+
+server.get("/:id", (req, res) => {
+  const { id } = req.params;
+  db("accounts")
+    .where({ id })
+    .then(accounts => {
+      // console.log("accounts", accounts);newAccount
+      const account = accounts[0];
+      if (account) {
+        res.status(500).json(account);
+      } else {
+        res.status(404).json({
+          message: "The ID you requested does not exist"
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Unable to GET your account by ID"
+      });
+    });
+});
+
+server.post("/", (req, res) => {
+  const newAccount = req.body;
+  db("accounts")
+    .insert(newAccount)
+    .then(id => {
+      res.status(201).json({ newAccountId: id[0] });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Can not create new account"
+      });
+    });
+});
+
+server.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const updateAccount = req.body;
+
+  db("accounts")
+    .where({ id })
+    .update(updateAccount)
+    .then(count => {
+      if (count) {
+        res.status(200).json({ updated: count });
+      } else {
+        res.status(404).json({
+          message: "Can not locate the account you want to change"
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Unable to make your changes"
+      });
+    });
+});
+
+server.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  db("accounts")
+    .where({ id })
+    .del()
+    .then(count => {
+      if (count) {
+        res.json({ deleted: count });
+      } else {
+        res.status(404).json({
+          message: "Can not find your account by ID"
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "Unable to DELETE your account"
+      });
+    });
+});
 
 module.exports = server;
