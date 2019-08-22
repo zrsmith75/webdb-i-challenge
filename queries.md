@@ -1,5 +1,7 @@
 # Database Queries
 
+# NOTE: The markdown adds a \ in front of the \* and I cannot figure out how to stop without escaping and changing it even more
+
 ## Find all customers with postal code 1010
 
 SELECT \* FROM Customers WHERE Postalcode = '1010';
