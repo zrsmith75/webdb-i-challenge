@@ -46,8 +46,8 @@ server.post("/", (req, res) => {
   const newAccount = req.body;
   db("accounts")
     .insert(newAccount)
-    .then(newAccount => {
-      res.status(201).json(newAccount);
+    .then(id => {
+      res.status(201).json({ newAccountId: id[0] });
     })
     .catch(error => {
       res.status(500).json({
